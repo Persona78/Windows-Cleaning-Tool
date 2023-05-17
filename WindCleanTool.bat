@@ -25,17 +25,26 @@ cls
 CD /d "%~dp0"
 @echo.
 @echo [1m[32mStart Cleanning tool.[0m
-@echo. [36m
+@echo.
 for %%a in (%systemdrive%\Users) do (
-@echo R|powershell.exe -File "%~dp01.ps1"
-%systemroot%\System32\cleanmgr.exe /AUTOCLEAN
+powershell.exe Clear-DnsClientCache
+@echo [1m[33mClosing and restarting Explorer, Shutdown Locked files by restarting Windows Explorer.[0m
+Taskkill /f /im Explorer.exe >nul
+Start Explorer.exe >nul
+Taskkill /f /im msedge.exe >nul
+rem @echo Y|%systemroot%\System32\cleanmgr.exe /VERYLOWDISK >nul
+@echo. [36m
+@echo Creating cleanmgr new entries to clean. & @echo off
+powershell.exe New-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' -Name 'Prefetch' -ErrorAction SilentlyContinue >nul
+powershell.exe New-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' -Name 'EdgeCache' -ErrorAction SilentlyContinue >nul
+@echo y|REG IMPORT "%~dp0reg.reg" >nul
 
-del /F /S /Q "%~dp01.ps1" >nul
+@echo R|powershell.exe -File "%~dp01.ps1"
+
 del /F /S /Q "%userprofile%\AppData\Local\Microsoft\Edge\User Data\Default\Cache\Cache_Data\*" >nul
 del /F /S /Q "%SystemDrive%\temp\*" >nul
 del /F /S /Q "%systemroot%\temp\*" >nul
 del /F /S /Q "%systemroot%\Prefetch\*" >nul
-del /f /s /q "%systemdrive%\*.tmp" >nul
 del /f /s /q "%systemdrive%\*\*.tmp" >nul
 del /f /s /q "%systemdrive%\*\*\*.tmp" >nul
 del /f /s /q "%systemdrive%\*\*\*\*.tmp" >nul
@@ -44,7 +53,11 @@ del /f /s /q "%systemdrive%\*\*\*\*\*\*.tmp" >nul
 del /f /s /q "%systemdrive%\*\*\*\*\*\*\*.tmp" >nul
 del /f /s /q "%systemdrive%\*\*\*\*\*\*\*\*.tmp" >nul
 del /F /S /Q "%temp%\*" >nul
-RD /S /Q "%temp%\*" >nul
+del /F /S /Q "%temp%\*\*" >nul
+del /F /S /Q "%temp%\*\*\*" >nul
+del /F /S /Q "%temp%\*\*\*\*" >nul
+del /F /S /Q "%temp%\*\*\*\*\*" >nul
+del /F /S /Q "%temp%\*\*\*\*\*\*" >nul
 )
 
 endlocal
