@@ -42,6 +42,8 @@ $Locations= @(
     "Windows ESD installation files"
     "Windows Upgrade Log Files"
 	"Windows Reset Log Files"
+	"Prefetch"
+	"EdgeCache"
 )
 
 # -ea silentlycontinue will supress error messages
